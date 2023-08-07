@@ -1,5 +1,7 @@
 import axios from "axios";
 import React from "react";
+import ToDoForm from "./Form";
+import TodoList from "./TodoList";
 
 const URL = "http://localhost:9000/api/todos";
 
@@ -62,14 +64,6 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
-    // fetch(URL)
-    //   .then((response) => response.json())
-    //   .then((json) => {
-    //     console.log(json.data);
-    //     this.setState({
-    //       todos: json.data,
-    //     });
-    //   });
     axios
       .get(URL)
       .then((response) => {
@@ -87,31 +81,17 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="todo">
-        <div id="todos">
-          <h2>ToDos:</h2>
-          {this.state.todos.map((todo) =>
-            !this.state.showAll && todo.completed ? null : (
-              <div key={todo.id}>
-                <p>
-                  <span onClick={this.toggleTodo(todo.id)}>
-                    {todo.completed ? "\u2612 " : "\u2610 "}-{" "}
-                  </span>
-                  {todo.name}
-                </p>
-              </div>
-            )
-          )}
-        </div>
+        <TodoList
+          todos={this.state.todos}
+          toggleTodo={this.toggleTodo}
+          showAll={this.state.showAll}
+        />
         <hr />
-        <form onSubmit={this.postTodo}>
-          <input
-            type="text"
-            placeholder="Add a new todo"
-            value={this.state.nameInput}
-            onChange={this.changeNameInput}
-          />
-          <button>Add</button>
-        </form>
+        <ToDoForm
+          nameInput={this.state.nameInput}
+          postTodo={this.postTodo}
+          changeNameInput={this.changeNameInput}
+        />
         <hr />
         {this.state.showAll ? (
           <button onClick={this.toggleShowAll} className="clear-btn">
